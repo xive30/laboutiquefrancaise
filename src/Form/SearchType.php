@@ -3,7 +3,10 @@
 namespace App\Form;
 
 use App\Classe\Search;
+use App\Entity\Category;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -14,12 +17,27 @@ class SearchType extends AbstractType
     {
         $builder
             ->add('string', TextType::class, [
-                'required' =>false,
+                'label' => false,
+                'required' => false,
                 'attr' => [
-                    'placeholder' => 'votre recherche'
+                        'placeholder' => 'votre recherche',
+                        'class' => 'form-control-sm'
                 ]
-
-                ]);
+            ])
+            ->add('categories', EntityType::class, [
+                'class' => Category::class,
+                'required' => false,
+                'class' => Category::class,
+                'multiple' => true,
+                'expanded' => true
+            ])
+            ->add ('submit', SubmitType::class, [
+                'label' => 'Filtrer',
+                'attr' => [
+                    'class' => 'btn-block btn-info'
+                ]
+            ])
+        ;
 
     }
 
@@ -29,12 +47,12 @@ class SearchType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Search::class,
             'method' => 'GET',
-            'crsf_protection' => false,
+            'csrf_protection' => false,
         ]);
     }
 
     public function getBlockPrefix()
     {
-        
+        return '';
     }
 }

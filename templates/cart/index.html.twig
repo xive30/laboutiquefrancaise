@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Panier - La Boutique Française{% endblock %}
+
+{% block content %}
+    <h1>Mon panier</h1>
+    Retrouver l'ensemble des produitsque vous avez ajouté à votre panier.
+    <hr>
+    <table class="table table-hover table-dark">
+  <thead>
+    <tr>
+      <th scope="col">Produits</th>
+      <th scope="col">Quantité</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for product in cart %}
+    {{ dump(product) }}
+    <tr>
+      <td>{{ product.product.name }}</td>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
