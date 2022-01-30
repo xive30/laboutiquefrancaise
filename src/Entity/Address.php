@@ -27,6 +27,11 @@ class Address
      * @ORM\Column(type="string", length=255)
      */
     private $name;
+    
+        /**
+         * @ORM\Column(type="string", length=255)
+         */
+        private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -63,6 +68,11 @@ class Address
      */
     private $phone;
 
+    public function __toString()
+    {
+        return $this->getName() . '[br]' . $this->getAddress() . '[br]' . $this->getPostal() . ' - ' . $this->getCity() ;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,9 +98,21 @@ class Address
     public function setName(string $name): self
     {
         $this->name = $name;
-
+        
         return $this;
     }
+    
+        public function getFirstname(): ?string
+        {
+            return $this->firstname;
+        }
+    
+        public function setFirstname(string $firstname): self
+        {
+            $this->firstname = $firstname;
+    
+            return $this;
+        }
 
     public function getLastname(): ?string
     {
