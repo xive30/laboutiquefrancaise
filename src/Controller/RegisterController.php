@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Classe\Mail;
 use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Notifier\Notification\Notification;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,7 +26,7 @@ class RegisterController extends AbstractController
      */
     public function index(Request $request, UserPasswordHasherInterface $passwordHasher): Response
     {
-
+        $notification = "";
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
 
@@ -34,18 +36,33 @@ class RegisterController extends AbstractController
 
             $user = $form->getData();
 
-            $password = $passwordHasher->hashPassword(
-                $user,
-                $user->getPassword()
-            );
-            $user->setPassword($password);
+            $search_email = $this->entityManager->getRepository(User::class)->findOneByEmail($user->getEmail());
+        
 
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+            if (!$search_email) {
+                $password = $passwordHasher->hashPassword(
+                    $user,
+                    $user->getPassword()
+                );
+                $user->setPassword($password);
+    
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+
+                $mail = new Mail();
+                $content = "Bonjour" . $user->Firstname() . ", <br> Bienvenue sur la première boutique dédiée au made in France. <br><br>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laboriosam temporibus molestiae consequatur repellat nemo fuga quod, expedita, porro tenetur necessitatibus sequi nulla magni nisi quasi blanditiis culpa quisquam aliquid. Minima. ";
+                $mail->send($user->getEmail(), $user->Firstname(), "Bienvenue sur La Boutique Française", $content);
+    
+                $notification = "Votre inscription s'est correctement déroulé. Vous pouvez dès à présent vous connecter à votre compte";
+            } else {
+                $notification = "L'email que vous avez renseigné existe déjà.";
+            }
+
         }
 
         return $this->render('register/index.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'notification' => $notification
         ]);
     }
 }

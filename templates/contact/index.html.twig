@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nous Contacter - La boutique Française{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Nous contacter</h2>
+            <p>N'hésiter pas à prendre contact avec notre équipe.</p>
+            {% for message in app.flashes('notice') %}
+                <div class="alert alert-info">{{ message }}</div>
+            {% endfor %}
+            {{ form(form) }}
+        </div>
+        <div class="col-md-4">
+            <strong>La Boutique Française</strong>
+            <hr>
+            06 20 30 40 50 <br>
+            Rue Emile Zola 59 000 Lille<br>
+            contact@laboutiquefrancaise.fr <br>
+        </div>
+    </div>
+{% endblock %}
